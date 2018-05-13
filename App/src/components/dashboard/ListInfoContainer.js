@@ -49,7 +49,7 @@ class ReportContainer extends Component {
     .append("g")
       .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-
+      console.log("data!!!",data)
     x.domain(d3.extent(data, function(d) { return d.age; })).nice();
     y.domain(d3.extent(data, function(d) { return d.year; })).nice();
 

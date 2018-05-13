@@ -9,24 +9,7 @@
     <link rel="shortcut icon" href="%PUBLIC_URL%/favicon.ico">
 
     <title>Dashboard</title>
-    <style>
 
-body {
-  font: 10px sans-serif;
-}
-
-.axis path,
-.axis line {
-  fill: none;
-  stroke: #000;
-  shape-rendering: crispEdges;
-}
-
-.dot {
-  stroke: #000;
-}
-
-</style>
     <!-- <script src="//d3js.org/d3.v3.min.js"></script> -->
   </head>
   <body>
@@ -69,6 +52,7 @@ d3.tsv("data.tsv", function(error, data) {
 
   x.domain(d3.extent(data, function(d) { return d.sepalWidth; })).nice();
   y.domain(d3.extent(data, function(d) { return d.sepalLength; })).nice();
+  console.log("data!!!",data)
 
   svg.append("g")
       .attr("class", "x axis")
@@ -90,7 +74,7 @@ d3.tsv("data.tsv", function(error, data) {
       .attr("y", 6)
       .attr("dy", ".71em")
       .style("text-anchor", "end")
-      .text("Sepal Length (cm)")
+      .text("Sepal Hi (cm)")
 
   svg.selectAll(".dot")
       .data(data)
