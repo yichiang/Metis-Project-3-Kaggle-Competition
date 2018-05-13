@@ -1,5 +1,6 @@
 import React, {Component } from 'react';
 import NavComponent from './NavComponent'
+import DashboardContainer from './DashboardContainer'
 import { Segment } from 'semantic-ui-react'
 
 class HomeContainer extends Component {
@@ -28,6 +29,7 @@ class HomeContainer extends Component {
         <div>
           <NavComponent handleItemClick={this.handleItemClick} activeItem={activeItem} links={links}/>
             <Segment attached='bottom'>
+              <DashboardContainer/>
           </Segment>
         </div>
         )
