@@ -5,20 +5,6 @@ import '../App.css';
 
 
 class NavComponent extends Component {
-  state = {
-  'activeItem':'bio',
-  'links': [
-    {'key':'dashboard','path':'/','name': 'Dashboard', 'icon': 'dashboard'},
-    {'key':'hist','path':'/ds','name': 'View Data', 'icon': 'feed'},
-    {'key':'download','path':'/ds','name': 'Download Center', 'icon': 'download'},
-    {'key':'contact','path':'/cs','name': 'Contact Us', 'icon': 'address card outline'},
-    {'key':'about','path':'/courses','name': 'About Us', 'icon': 'user'}
-
-] }
-  // props = {
-  // }
-
-  handleItemClick = (e, { name }) => this.setState({ activeItem: name })
 
   constructor(props) {
     super(props);
@@ -28,7 +14,7 @@ class NavComponent extends Component {
 
   }
   render() {
-    const { activeItem,links } = this.state
+    const { activeItem,links } = this.props
     // const { links } = this.props
     console.log(this.state)
         return (
@@ -39,10 +25,11 @@ class NavComponent extends Component {
           </Menu.Item>
           {links.map(x =>
             <Menu.Item
+              key={x.key}
               className='centerIcon'
               name={x.key}
-              active={activeItem === x.name}
-              onClick={this.handleItemClick}
+              active={activeItem === x.key}
+              onClick={this.props.handleItemClick}
             >
               <Icon name={x.icon} />
               {x.name}
@@ -50,8 +37,10 @@ class NavComponent extends Component {
 
           )}
           <Menu.Menu position='right'>
-              <Menu.Item>
-               <Input transparent icon={{ name: 'search', link: true }} placeholder='Search...' />
+              <Menu.Item  className='centerIcon'>
+                <div>
+                  <Input transparent icon={{ name: 'search', link: true }} placeholder='Search...' />
+                </div>
               </Menu.Item>
           </Menu.Menu>
 
