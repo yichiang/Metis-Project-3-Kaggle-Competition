@@ -33,3 +33,9 @@ body {
   max-width: 90vw;
   overflow-y: scroll;
 }
+
+.submitButton{
+  align-items: flex-end;
+  display: flex;
+
+}

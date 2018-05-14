@@ -1,10 +1,18 @@
 import React, {Component } from 'react';
-import { Icon, Button, Card, Image, Header, Table, Rating, Pagination  } from 'semantic-ui-react'
+import { Icon, Button, Card, Image, Header, Table,  Grid, Form, Pagination, Segment, Dropdown  } from 'semantic-ui-react'
 import $ from 'jquery'
 import moment from 'moment'
 
+// const options = [
+//   { key: 'English', text: 'English', value: 'English' },
+//   { key: 'French', text: 'French', value: 'French' },
+//   { key: 'Spanish', text: 'Spanish', value: 'Spanish' },
+//   { key: 'German', text: 'German', value: 'German' },
+//   { key: 'Chinese', text: 'Chinese', value: 'Chinese' },
+// ]
+
 class ReportContainer extends Component {
-  state = { lastUpdated:'1/1/2019', data: [], totalCount:5, currentPage:0}
+  state = { lastUpdated:moment().format("YYYY-MM-DD HH:mm:ss"), data: [], totalCount:5, activePage:0, currentValues:'', options: []}
   constructor(props) {
     super(props);
     this.onPageChange = this.onPageChange.bind(this)
@@ -12,14 +20,32 @@ class ReportContainer extends Component {
   }
   componentDidMount() {
     this.getData()
+    this.getAllIps()
   }
-  getData(){
-    var url = `http://127.0.0.1:5000/api/data?page=${this.state.totalCount}&skip=${this.state.currentPage * this.state.totalCount}`;
+
+  getAllIps(){
+
+    var url = `http://127.0.0.1:5000/api/data/ip/all`;
     $.ajax({
        url: url,
        type: "GET",
        dataType: 'json',
        success: function (data) {
+         var ips = [].concat.apply([], data);
+         var allOptions = ips.map(x => ({ key: x, text: x, value: x }))
+         this.setState({options: allOptions});
+         console.log("allOptions----", allOptions)
+       }.bind(this)
+     });
+  }
+  getData(){
+    var url = `http://127.0.0.1:5000/api/data?page=${this.state.totalCount}&skip=${this.state.activePage * this.state.totalCount}`;
+    $.ajax({
+       url: url,
+       type: "GET",
+       dataType: 'json',
+       success: function (data) {
+
          //var convert_data = data.data;
          var convert_data = Object.values(data.data);
          this.setState({data: convert_data});
@@ -28,17 +54,95 @@ class ReportContainer extends Component {
   }
 
   onPageChange(e, d){
-    console.log(e, d)
-    this.setState({currentPage: d.activePage})
+    // console.log(e, d)
+    this.setState({activePage: d.activePage})
     this.getData()
   }
+
+  handleCheckboxChange = (e, { checked, name }) => this.setState({ [name]: checked })
+
+handleInputChange = (e, { name, value }) => this.setState({ [name]: value })
+
+handlePaginationChange = (e, { activePage }) => this.setState({ activePage })
+
+
+  handleAddition = (e, { value }) => {
+    this.setState({
+      options: [{ text: value, value }, ...this.state.options],
+    })
+  }
+
+  handleChange = (e, { value }) => this.setState({ currentValues: value })
+
+
+
   render() {
-    const { lastUpdated } = this.state;
+    const {
+      currentValues,
+      lastUpdated,
+     activePage,
+     boundaryRange,
+     siblingRange,
+     showEllipsis,
+     showFirstAndLastNav,
+     showPreviousAndNextNav,
+     totalPages,
+   } = this.state
+
         return (
           <div>
             <Header as='h3' block>
                Last Updated since {lastUpdated}
              </Header>
+             <Form as={Segment}>
+            <Form.Group widths={2}>
+              <Form.Input
+                label='Active page'
+                name='activePage'
+                min={1}
+                onChange={this.handleInputChange}
+                type='number'
+                value={activePage}
+              />
+              <Form.Input
+                label='Channel'
+                name='channel'
+                min={1}
+                onChange={this.handleInputChange}
+                type='number'
+                value={totalPages}
+              />
+            </Form.Group>
+            <Form.Group widths={2}>
+              <div className='field'>
+              <label>APP</label>
+              <Dropdown
+                 options={this.state.options}
+                 search
+                 selection
+                 fluid
+                 multiple
+                 allowAdditions
+                 value={currentValues}
+                 onAddItem={this.handleAddition}
+                 onChange={this.handleChange}
+               />
+             </div>
+             <Form.Button className='submitButton'>Submit</Form.Button>
+
+            </Form.Group>
+            <Form.Group inline>
+
+              <Form.Checkbox
+                checked={showFirstAndLastNav}
+                label='Only Download Entry'
+                name='showFirstAndLastNav'
+                onChange={this.handleCheckboxChange}
+              />
+
+            </Form.Group>
+
+          </Form>
                 <Table celled padded>
                   <Table.Header>
                     <Table.Row>
@@ -81,7 +185,7 @@ class ReportContainer extends Component {
                 </Table>
                 <div className='pagination_wrap'>
                   <Pagination
-                    defaultActivePage={this.state.currentPage}
+                    defaultActivePage={activePage}
                     ellipsisItem={{ content: <Icon name='ellipsis horizontal' />, icon: true }}
                     firstItem={{ content: <Icon name='angle double left' />, icon: true }}
                     lastItem={{ content: <Icon name='angle double right' />, icon: true }}
