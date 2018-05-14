@@ -1,19 +1,31 @@
 import React, {Component } from 'react';
-import { Button, Card, Image, Header, Table, Rating  } from 'semantic-ui-react'
+import { Icon, Button, Card, Image, Header, Table, Rating, Pagination  } from 'semantic-ui-react'
+import $ from 'jquery'
+import moment from 'moment'
 
-class ListInfoContainer extends Component {
-  state = { lastUpdated:'1/1/2019'}
+class ReportContainer extends Component {
+  state = { lastUpdated:'1/1/2019', data: []}
   constructor(props) {
     super(props);
     this.handleItemClick = this.handleItemClick.bind(this)
 
   }
   componentDidMount() {
-
+    var url = 'http://127.0.0.1:5000/api/data';
+    $.ajax({
+       url: url,
+       type: "GET",
+       dataType: 'json',
+       success: function (data) {
+         //var convert_data = data.data;
+         var convert_data = Object.values(data.data);
+         this.setState({data: convert_data});
+       }.bind(this)
+     });
   }
   handleItemClick = (e, { name }) => this.setState({ activeItem: name })
   render() {
-    const {lastUpdated} = this.state;
+    const { lastUpdated } = this.state;
         return (
           <div>
             <Header as='h3' block>
@@ -33,25 +45,44 @@ class ListInfoContainer extends Component {
                   </Table.Header>
 
                   <Table.Body>
-                    <Table.Row>
-                      <Table.Cell>
-                        <Header as='h2' textAlign='center'>A</Header>
-                      </Table.Cell>
-                      <Table.Cell></Table.Cell>
-                      <Table.Cell></Table.Cell>
-                      <Table.Cell></Table.Cell>
-                      <Table.Cell></Table.Cell>
-                      <Table.Cell></Table.Cell>
-                      <Table.Cell></Table.Cell>
 
-                    </Table.Row>
+                    {this.state.data.map(x => {
+                      return (
 
+                          <Table.Row>
+                            <Table.Cell>
+                              {/* <Header as='h2' textAlign='center'>A</Header> */}
+                                <Icon name='warning sign' color='yellow'/>
+                            </Table.Cell>
+                            <Table.Cell>{x.ip}</Table.Cell>
+                            <Table.Cell>{x.app}</Table.Cell>
+                            <Table.Cell>{x.device}</Table.Cell>
+                            <Table.Cell>{x.channel}</Table.Cell>
+                            <Table.Cell>{x.click_time?moment(x.click_time).format("YYYY-MM-DD HH:mm:ss"):'n/a'}</Table.Cell>
+                            <Table.Cell>
+                              <Icon name={x.is_attributed? 'checkmark':'remove'}  color={x.is_attributed? 'blue':'black'}/>
+                            </Table.Cell>
+
+                          </Table.Row>
+
+
+                      )
+
+                    })}
                   </Table.Body>
                 </Table>
-
+                <Pagination
+                  defaultActivePage={5}
+                  ellipsisItem={{ content: <Icon name='ellipsis horizontal' />, icon: true }}
+                  firstItem={{ content: <Icon name='angle double left' />, icon: true }}
+                  lastItem={{ content: <Icon name='angle double right' />, icon: true }}
+                  prevItem={{ content: <Icon name='angle left' />, icon: true }}
+                  nextItem={{ content: <Icon name='angle right' />, icon: true }}
+                  totalPages={10}
+                />
           </div>
         )
     }
 }
 
-export default ListInfoContainer;
+export default ReportContainer;

@@ -1,6 +1,7 @@
 import React, {Component } from 'react';
 import { Button, Card, Image } from 'semantic-ui-react'
-import NavComponent from './dashboard/ListInfoContainer'
+import ListInfoContainer from './dashboard/ListInfoContainer'
+import ReportContainer from './dashboard/ReportContainer'
 
 class DashboardContainer extends Component {
   state = {}
@@ -17,7 +18,8 @@ class DashboardContainer extends Component {
     const {activeItem, links} = this.state;
         return (
         <div>
-           <NavComponent/>
+           <ReportContainer/>
+           <ListInfoContainer/>
         </div>
         )
     }
