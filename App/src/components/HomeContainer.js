@@ -1,6 +1,7 @@
 import React, {Component } from 'react';
 import NavComponent from './NavComponent'
 import DashboardContainer from './DashboardContainer'
+import PredictContainer from './PredictContainer'
 import { Segment } from 'semantic-ui-react'
 
 class HomeContainer extends Component {
@@ -8,6 +9,7 @@ class HomeContainer extends Component {
   'activeItem':'dashboard',
   'links': [
     {'key':'dashboard','path':'/','name': 'Dashboard', 'icon': 'dashboard'},
+    {'key':'predict','path':'/','name': 'Predict', 'icon': 'braille'},
     {'key':'hist','path':'/ds','name': 'View Data', 'icon': 'feed'},
     {'key':'download','path':'/ds','name': 'Download Center', 'icon': 'download'},
     {'key':'contact','path':'/cs','name': 'Contact Us', 'icon': 'address card outline'},
@@ -29,7 +31,8 @@ class HomeContainer extends Component {
         <div>
           <NavComponent handleItemClick={this.handleItemClick} activeItem={activeItem} links={links}/>
             <Segment attached='bottom'>
-              <DashboardContainer/>
+              {activeItem=='dashboard'&&<DashboardContainer/>}
+              {activeItem=='predict'&&<PredictContainer/>}
           </Segment>
         </div>
         )

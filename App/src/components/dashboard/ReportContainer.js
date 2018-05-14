@@ -3,13 +3,6 @@ import { Icon, Button, Card, Image, Header, Table,  Grid, Form, Pagination, Segm
 import $ from 'jquery'
 import moment from 'moment'
 
-// const options = [
-//   { key: 'English', text: 'English', value: 'English' },
-//   { key: 'French', text: 'French', value: 'French' },
-//   { key: 'Spanish', text: 'Spanish', value: 'Spanish' },
-//   { key: 'German', text: 'German', value: 'German' },
-//   { key: 'Chinese', text: 'Chinese', value: 'Chinese' },
-// ]
 
 class ReportContainer extends Component {
   state = { lastUpdated:moment().format("YYYY-MM-DD HH:mm:ss"), data: [], totalCount:5, activePage:0, currentValues:'', options: []}
@@ -61,9 +54,9 @@ class ReportContainer extends Component {
 
   handleCheckboxChange = (e, { checked, name }) => this.setState({ [name]: checked })
 
-handleInputChange = (e, { name, value }) => this.setState({ [name]: value })
+  handleInputChange = (e, { name, value }) => this.setState({ [name]: value })
 
-handlePaginationChange = (e, { activePage }) => this.setState({ activePage })
+  handlePaginationChange = (e, { activePage }) => this.setState({ activePage })
 
 
   handleAddition = (e, { value }) => {
@@ -74,19 +67,17 @@ handlePaginationChange = (e, { activePage }) => this.setState({ activePage })
 
   handleChange = (e, { value }) => this.setState({ currentValues: value })
 
-
-
   render() {
     const {
       currentValues,
       lastUpdated,
-     activePage,
-     boundaryRange,
-     siblingRange,
-     showEllipsis,
-     showFirstAndLastNav,
-     showPreviousAndNextNav,
-     totalPages,
+      activePage,
+      boundaryRange,
+      siblingRange,
+      showEllipsis,
+      showFirstAndLastNav,
+      showPreviousAndNextNav,
+      totalPages,
    } = this.state
 
         return (
@@ -95,54 +86,54 @@ handlePaginationChange = (e, { activePage }) => this.setState({ activePage })
                Last Updated since {lastUpdated}
              </Header>
              <Form as={Segment}>
-            <Form.Group widths={2}>
-              <Form.Input
-                label='Active page'
-                name='activePage'
-                min={1}
-                onChange={this.handleInputChange}
-                type='number'
-                value={activePage}
-              />
-              <Form.Input
-                label='Channel'
-                name='channel'
-                min={1}
-                onChange={this.handleInputChange}
-                type='number'
-                value={totalPages}
-              />
-            </Form.Group>
-            <Form.Group widths={2}>
-              <div className='field'>
-              <label>APP</label>
-              <Dropdown
-                 options={this.state.options}
-                 search
-                 selection
-                 fluid
-                 multiple
-                 allowAdditions
-                 value={currentValues}
-                 onAddItem={this.handleAddition}
-                 onChange={this.handleChange}
-               />
-             </div>
-             <Form.Button className='submitButton'>Submit</Form.Button>
+              <Form.Group widths={2}>
+                <Form.Input
+                  label='Active page'
+                  name='activePage'
+                  min={1}
+                  onChange={this.handleInputChange}
+                  type='number'
+                  value={activePage}
+                />
+                <Form.Input
+                  label='Channel'
+                  name='channel'
+                  min={1}
+                  onChange={this.handleInputChange}
+                  type='number'
+                  value={totalPages}
+                />
+              </Form.Group>
+              <Form.Group widths={2}>
+                <div className='field'>
+                <label>APP</label>
+                <Dropdown
+                   options={this.state.options}
+                   search
+                   selection
+                   fluid
+                   multiple
+                   allowAdditions
+                   value={currentValues}
+                   onAddItem={this.handleAddition}
+                   onChange={this.handleChange}
+                 />
+               </div>
+               <Form.Button className='submitButton'>Submit</Form.Button>
 
-            </Form.Group>
-            <Form.Group inline>
+              </Form.Group>
+              <Form.Group inline>
 
-              <Form.Checkbox
-                checked={showFirstAndLastNav}
-                label='Only Download Entry'
-                name='showFirstAndLastNav'
-                onChange={this.handleCheckboxChange}
-              />
+                <Form.Checkbox
+                  checked={showFirstAndLastNav}
+                  label='Only Download Entry'
+                  name='showFirstAndLastNav'
+                  onChange={this.handleCheckboxChange}
+                />
 
-            </Form.Group>
+              </Form.Group>
 
-          </Form>
+            </Form>
                 <Table celled padded>
                   <Table.Header>
                     <Table.Row>
