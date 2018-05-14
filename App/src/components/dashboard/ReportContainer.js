@@ -4,14 +4,17 @@ import $ from 'jquery'
 import moment from 'moment'
 
 class ReportContainer extends Component {
-  state = { lastUpdated:'1/1/2019', data: []}
+  state = { lastUpdated:'1/1/2019', data: [], totalCount:5, currentPage:0}
   constructor(props) {
     super(props);
-    this.handleItemClick = this.handleItemClick.bind(this)
+    this.onPageChange = this.onPageChange.bind(this)
 
   }
   componentDidMount() {
-    var url = 'http://127.0.0.1:5000/api/data';
+    this.getData()
+  }
+  getData(){
+    var url = `http://127.0.0.1:5000/api/data?page=${this.state.totalCount}&skip=${this.state.currentPage * this.state.totalCount}`;
     $.ajax({
        url: url,
        type: "GET",
@@ -23,7 +26,12 @@ class ReportContainer extends Component {
        }.bind(this)
      });
   }
-  handleItemClick = (e, { name }) => this.setState({ activeItem: name })
+
+  onPageChange(e, d){
+    console.log(e, d)
+    this.setState({currentPage: d.activePage})
+    this.getData()
+  }
   render() {
     const { lastUpdated } = this.state;
         return (
@@ -71,15 +79,18 @@ class ReportContainer extends Component {
                     })}
                   </Table.Body>
                 </Table>
-                <Pagination
-                  defaultActivePage={5}
-                  ellipsisItem={{ content: <Icon name='ellipsis horizontal' />, icon: true }}
-                  firstItem={{ content: <Icon name='angle double left' />, icon: true }}
-                  lastItem={{ content: <Icon name='angle double right' />, icon: true }}
-                  prevItem={{ content: <Icon name='angle left' />, icon: true }}
-                  nextItem={{ content: <Icon name='angle right' />, icon: true }}
-                  totalPages={10}
-                />
+                <div className='pagination_wrap'>
+                  <Pagination
+                    defaultActivePage={this.state.currentPage}
+                    ellipsisItem={{ content: <Icon name='ellipsis horizontal' />, icon: true }}
+                    firstItem={{ content: <Icon name='angle double left' />, icon: true }}
+                    lastItem={{ content: <Icon name='angle double right' />, icon: true }}
+                    prevItem={{ content: <Icon name='angle left' />, icon: true }}
+                    nextItem={{ content: <Icon name='angle right' />, icon: true }}
+                    onPageChange={this.onPageChange}
+                    totalPages={10}
+                  />
+              </div>
           </div>
         )
     }

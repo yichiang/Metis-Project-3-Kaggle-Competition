@@ -1,5 +1,7 @@
 import React, {Component } from 'react';
 import { Button, Card, Image, Header, Table, Rating  } from 'semantic-ui-react'
+import {BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend} from 'recharts';
+
 import $ from 'jquery'
 import * as d3 from 'd3'
 import '../../App.css';
@@ -139,9 +141,35 @@ class ScatterChartContainer extends Component {
     console.log("props",this.props)
         return (
           <div id="vis-container">
+            <div  className='scrollChart'>
+              <Header as='h2'>
+                  Total Record (x) and download Count (y) by different Apps (color)
+                  <Header.Subheader>
+                    It helps us to see app dowload rate
+                  </Header.Subheader>
+                </Header>
             {this.props.chart}
+            </div>
             {/* {this.state.toogleTooltip && this.props.tooltip} */}
             {/* {this.props.tooltip} */}
+            {this.props.data&&<div className='scrollChart'>
+              <Header as='h2'>
+                  Total Record and download Count by different Apps
+                  <Header.Subheader>
+                    It helps us to see app dowload rate
+                  </Header.Subheader>
+                </Header>
+                <BarChart width={2000} height={300} data={this.props.data}
+                    margin={{top: 5, right: 30, left: 20, bottom: 5}}>
+               <CartesianGrid strokeDasharray="3 3"/>
+                 <XAxis dataKey="app"/>
+                 <YAxis/>
+                 <Tooltip/>
+                 <Legend />
+                 <Bar dataKey="record_count" fill="#bf40bf" />
+                 <Bar dataKey="dowload_count" fill="#33cc00" />
+              </BarChart>
+            </div>}
         </div>
         )
     }

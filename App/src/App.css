@@ -17,10 +17,19 @@ body {
 }
 
 .tooltip {
-            position: absolute;
-            font-size: 12px;
-            width:  auto;
-            height: auto;
-            pointer-events: none;
-            background-color: white;
-        }
+  position: absolute;
+  font-size: 12px;
+  width:  auto;
+  height: auto;
+  pointer-events: none;
+  background-color: white;
+}
+.pagination_wrap {
+  display: flex;
+  justify-content: center;
+}
+.scrollChart{
+  margin: 50px auto;
+  max-width: 90vw;
+  overflow-y: scroll;
+}
