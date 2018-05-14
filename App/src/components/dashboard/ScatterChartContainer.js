@@ -3,127 +3,152 @@ import { Button, Card, Image, Header, Table, Rating  } from 'semantic-ui-react'
 import $ from 'jquery'
 import * as d3 from 'd3'
 import '../../App.css';
-import ReactFauxDOM from 'react-faux-dom';
+import {withFauxDOM} from 'react-faux-dom';
 
+// var tool_tip_el;
+// var div_tooltip;
 class ScatterChartContainer extends Component {
-  // state = { lastUpdated:'1/1/2019'}
+  state = { toogleTooltip: true}
   constructor(props) {
     super(props);
-    this.getChart = this.getChart.bind(this)
-
+    this.getChart=this.getChart.bind(this)
   }
-  // componentDidMount() {
-  //   var url = 'http://127.0.0.1:5000/api/data/app';
-  //   $.ajax({
-  //      url: url,
-  //      type: "GET",
-  //      dataType: 'json',
-  //      success: function (data) {
-  //        console.log(data)
-  //        var convert_data = data.data;
-  //        this.getChart(convert_data)
-  //        // this.setState({result: data});
-  //      }.bind(this)
-  //    });
+
+
+  componentDidMount() {
+    // this.createToolTip()
+  // const tool_tip_el = this.props.connectFauxDOM('div','tooltip');
+  //   //
+  //   var div_tooltip = d3.select(tool_tip_el).append("div")
+  //                 .attr("class", "tooltip")
+  //                 .style("width", '100px')
+  //                 .style("height", '200px')
+  //                 .style("background", 'blue')
+  //                 .style("opacity", .10);
+    this.getChart(this.props.data)
+  }
+  //
+  // onMoveHover(d, div_tooltip){
+  //   console.log("hover", d, div_tooltip)
+  //   if(div_tooltip)
+  //   {
+  //     div_tooltip.transition()
+  //       .duration(200)
+  //       .style("width", '100px')
+  //       .style("height", '200px')
+  //       .style("background", 'blue')
+  //       .style("opacity", .9);
+  //
+  //     div_tooltip.html(d.app + "<br/>" + d.record_count)
+  //       .style("left", (d3.event.pageX) + "px")
+  //       .style("top", (d3.event.pageY - 28) + "px")
+  //
+  //       this.setState({toogleTooltip:!this.state.toogleTooltip})
+  //   }
+  //
   // }
 
-  getChart(data){
 
-  var margin = {top: 20, right: 20, bottom: 30, left: 40},
-      width = 960 - margin.left - margin.right,
-      height = 500 - margin.top - margin.bottom;
+    getChart(data,div_tooltip){
+      //Source:https://bl.ocks.org/mbostock/3887118
+      var margin = {top: 20, right: 20, bottom: 30, left: 40},
+          width = 960 - margin.left - margin.right,
+          height = 500 - margin.top - margin.bottom;
 
-  var x = d3.scaleLinear()
-      .range([0, width]);
+      var x = d3.scaleLinear()
+          .range([0, width]);
 
-  var y = d3.scaleLinear()
-      .range([height, 0]);
+      var y = d3.scaleLinear()
+          .range([height, 0]);
 
-  var color = d3.scaleOrdinal(d3.schemeCategory10);
+      var color = d3.scaleOrdinal(d3.schemeCategory10);
 
-  var xAxis = d3.axisBottom(x);
+      var xAxis = d3.axisBottom(x);
 
-  var yAxis = d3.axisLeft(y);
-  // we create the faux element
-    let el = new ReactFauxDOM.Element('div');
-    // we set ref on our newly created element
-    el.setAttribute("ref", "chart");
+      var yAxis = d3.axisLeft(y);
 
-    // we attach the width and the height to our svg
-    let svg = d3.select(el).append('svg')
-      .attr("width", width + margin.left + margin.right)
-      .attr("height", height + margin.top + margin.bottom)
-    .append("g")
-      .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-      console.log("data!!!",data)
-    x.domain(d3.extent(data, function(d) { return d.age; })).nice();
-    y.domain(d3.extent(data, function(d) { return d.year; })).nice();
+      const el = this.props.connectFauxDOM('div', 'chart')
 
-    svg.append("g")
-        .attr("class", "x axis")
-        .attr("transform", "translate(0," + height + ")")
-        .call(xAxis)
-      .append("text")
-        .attr("class", "label")
-        .attr("x", width)
-        .attr("y", -6)
-        .style("text-anchor", "end")
-        .text("Sepal Width (cm)");
+      let svg = d3.select(el).append('svg')
+          .attr("width", width + margin.left + margin.right)
+          .attr("height", height + margin.top + margin.bottom)
+        .append("g")
+          .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-    svg.append("g")
-        .attr("class", "y axis")
-        .call(yAxis)
-      .append("text")
-        .attr("class", "label")
-        .attr("transform", "rotate(-90)")
-        .attr("y", 6)
-        .attr("dy", ".71em")
-        .style("text-anchor", "end")
-        .text("Sepal Length (cm)")
 
-    svg.selectAll(".dot")
-        .data(data)
-      .enter().append("circle")
-        .attr("class", "dot")
-        .attr("r", 3.5)
-        .attr("cx", function(d) { return x(d.age); })
-        .attr("cy", function(d) { return y(d.year); })
-        .style("fill", function(d) { return color(d.survived); });
 
-    var legend = svg.selectAll(".legend")
-        .data(color.domain())
-      .enter().append("g")
-        .attr("class", "legend")
-        .attr("transform", function(d, i) { return "translate(0," + i * 20 + ")"; });
+        x.domain(d3.extent(data, function(d) { return d.record_count; })).nice();
+        y.domain(d3.extent(data, function(d) { return d.dowload_count; })).nice();
 
-    legend.append("rect")
-        .attr("x", width - 18)
-        .attr("width", 18)
-        .attr("height", 18)
-        .style("fill", color);
+        svg.append("text")
+          .attr("class", "x label")
+          .attr("text-anchor", "end")
+          .attr("x", width -50)
+          .attr("y", height - 6)
+          .text("Total Record");
 
-    legend.append("text")
-        .attr("x", width - 24)
-        .attr("y", 9)
-        .attr("dy", ".35em")
-        .style("text-anchor", "end")
-        .text(function(d) { return d; });
+        svg.append("text")
+            .attr("class", "y label")
+            .attr("text-anchor", "end")
+            .attr("y", 6)
+            .attr("dy", ".75em")
+            .attr("transform", "rotate(-90)")
+            .text('Dowload Count');
 
-        return el.toReact();
+        svg.append("text")
+             .attr("class", "title")
+             .attr("x", 10)
+             .attr("y", -26)
+             .text("Why Are We Leaving Facebook?");
+
+
+        svg.append("g")
+            .attr("class", "x axis")
+            .attr("transform", "translate(0," + height + ")")
+            .call(xAxis)
+
+
+        svg.append("g")
+            .attr("class", "y axis")
+            .call(yAxis)
+
+        var self=this;
+        svg.selectAll(".dot")
+            .data(data)
+          .enter().append("circle")
+            .attr("class", "dot")
+            .attr("r", 3.5)
+            .attr("cx", function(d) { return x(d.record_count); })
+            .attr("cy", function(d) { return y(d.dowload_count); })
+            .style("fill", function(d) { return color(d.app); })
+            // .on("mouseover", (d)=>this.onMoveHover(d, div_tooltip))
+            //     .on("mouseout", function(d) {
+            //         if(div_tooltip)
+            //         {
+            //           div_tooltip.transition()
+            //             .duration(500)
+            //             .style("opacity", 0);
+            //         }
+            //       });
+
 
     }
 
-
-
-
-  handleItemClick = (e, { name }) => this.setState({ activeItem: name })
   render() {
+    console.log("props",this.props)
         return (
-          this.getChart(this.props.data)
-
+          <div id="vis-container">
+            {this.props.chart}
+            {/* {this.state.toogleTooltip && this.props.tooltip} */}
+            {/* {this.props.tooltip} */}
+        </div>
         )
     }
 }
-
-export default ScatterChartContainer;
+ScatterChartContainer.defaultProps = {
+  chart: 'loading',
+  tooltip:'loading'
+}
+// export default ScatterChartContainer;
+export default withFauxDOM(ScatterChartContainer)
