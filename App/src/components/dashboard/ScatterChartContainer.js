@@ -18,38 +18,8 @@ class ScatterChartContainer extends Component {
 
 
   componentDidMount() {
-    // this.createToolTip()
-  // const tool_tip_el = this.props.connectFauxDOM('div','tooltip');
-  //   //
-  //   var div_tooltip = d3.select(tool_tip_el).append("div")
-  //                 .attr("class", "tooltip")
-  //                 .style("width", '100px')
-  //                 .style("height", '200px')
-  //                 .style("background", 'blue')
-  //                 .style("opacity", .10);
     this.getChart(this.props.data)
   }
-  //
-  // onMoveHover(d, div_tooltip){
-  //   console.log("hover", d, div_tooltip)
-  //   if(div_tooltip)
-  //   {
-  //     div_tooltip.transition()
-  //       .duration(200)
-  //       .style("width", '100px')
-  //       .style("height", '200px')
-  //       .style("background", 'blue')
-  //       .style("opacity", .9);
-  //
-  //     div_tooltip.html(d.app + "<br/>" + d.record_count)
-  //       .style("left", (d3.event.pageX) + "px")
-  //       .style("top", (d3.event.pageY - 28) + "px")
-  //
-  //       this.setState({toogleTooltip:!this.state.toogleTooltip})
-  //   }
-  //
-  // }
-
 
     getChart(data,div_tooltip){
       //Source:https://bl.ocks.org/mbostock/3887118
@@ -124,15 +94,7 @@ class ScatterChartContainer extends Component {
             .attr("cx", function(d) { return x(d.record_count); })
             .attr("cy", function(d) { return y(d.dowload_count); })
             .style("fill", function(d) { return color(d.app); })
-            // .on("mouseover", (d)=>this.onMoveHover(d, div_tooltip))
-            //     .on("mouseout", function(d) {
-            //         if(div_tooltip)
-            //         {
-            //           div_tooltip.transition()
-            //             .duration(500)
-            //             .style("opacity", 0);
-            //         }
-            //       });
+          
 
 
     }

@@ -1,41 +1,59 @@
 import React, {Component } from 'react';
-import { Icon, Button, Card, Image, Header, Table,  Grid, Form, Pagination, Segment, Dropdown  } from 'semantic-ui-react'
+import { Icon, Button, Card, Image, Header, Table,  Grid, Form, Pagination, Segment, Dropdown, Message  } from 'semantic-ui-react'
 import ListInfoContainer from './dashboard/ListInfoContainer'
 import ReportContainer from './dashboard/ReportContainer'
 import moment from 'moment'
+import $ from 'jquery'
 
 class PredictContainer extends Component {
   state = {
-    search_model: {ip:'', app:'', device:'', channel:'', click_time: moment().format('YYYY-MM-DD')}
+    search_model: {ip:48418, app:14, device:1, channel:121, os:1, hour: moment().hour(), score:-1},
+    loading: false
   }
   constructor(props) {
     super(props);
-    // this.handleItemClick = this.handleItemClick.bind(this)
+    this.handleSubmit = this.handleSubmit.bind(this)
+    this.handleInputChange = this.handleInputChange.bind(this)
 
   }
   componentDidMount() {
     // search_model={ip:'', app:'', device:'', channel:'', click_time: moment().format('YYYY-MM-DD')}
   }
-  // handleCheckboxChange = (e, { checked, name }) => this.setState({ [name]: checked })
 
-  handleInputChange = (e, { name, value }) => this.setState({ [name]: value })
+  handleInputChange (e, { name, value }) {
+    var currentModel = this.state.search_model
+    console.log(currentModel)
+    currentModel[name] = value
+    this.setState({ search_model: currentModel })
+  }
 
-  // handlePaginationChange = (e, { activePage }) => this.setState({ activePage })
 
-
-  // handleAddition = (e, { value }) => {
-  //   this.setState({
-  //     options: [{ text: value, value }, ...this.state.options],
-  //   })
-  // }
 
   handleChange = (e, { value }) => this.setState({ currentValues: value })
+  handleSubmit(e){
+    // console.log("submit",e)
+    var url = `http://127.0.0.1:5000/api/score`;
+    var currentModel = this.state.search_model
+    this.setState({loading: true})
+    var self = this;
+    $.ajax({
+       url: url,
+       type: "post",
+       data: JSON.stringify(currentModel),
+       contentType: "application/json; charset=utf-8",
+       success: function (data) {
+         console.log("data----", data)
+         self.setState({loading: false, score: data.score})
 
+       }.bind(this)
+     });
+  }
 
-  // handleItemClick = (e, { name }) => this.setState({ activeItem: name })
   render() {
     const {
-      search_model
+      search_model,
+      loading,
+      score
    } = this.state
 
     // const {activeItem, links} = this.state;
@@ -77,15 +95,40 @@ class PredictContainer extends Component {
                type='number'
                value={search_model.channel}
              />
+             <Form.Input
+               label='os'
+               name='os'
+               min={1}
+               onChange={this.handleInputChange}
+               type='number'
+               value={search_model.os}
+             />
+             <Form.Input
+               label='hour'
+               name='hour'
+               min={1}
+               onChange={this.handleInputChange}
+               type='number'
+               value={search_model.hour}
+             />
+              {/* <input type="datetime-local"/> */}
            </Form.Group>
            <Form.Group widths={2}>
-
-            <Form.Button className='submitButton'>Submit</Form.Button>
-
+             <Button type='submit'  onClick={this.handleSubmit}>Submit</Button>
            </Form.Group>
-
-
          </Form>
+         <Message icon>
+{loading?  <Icon name='circle notched' loading />
+:  <Icon name='unlock alternate' />
+}
+<Message.Content>
+    <Message.Header>
+    {loading?  'Just one second':  'Your score:'}
+  </Message.Header>
+    <div>{score}</div>
+    <div className='red'>{score > 0.5?"This user won't download the app": "This user should download the app"}</div>
+</Message.Content>
+</Message>
         </div>
         )
     }
