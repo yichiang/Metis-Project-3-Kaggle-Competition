@@ -43,3 +43,6 @@ body {
 .red{
   color: #f2711c;
 }
+.status-icon{
+  text-align: center;
+}

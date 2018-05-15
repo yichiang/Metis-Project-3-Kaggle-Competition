@@ -5,10 +5,17 @@ import moment from 'moment'
 
 
 class ReportContainer extends Component {
-  state = { lastUpdated:moment().format("YYYY-MM-DD HH:mm:ss"), data: [], totalCount:5, activePage:0, currentValues:'', options: []}
+  state = { lastUpdated:moment().format("YYYY-MM-DD HH:mm:ss")
+  , data: []
+  , ip: []
+  , channel: ''
+  , totalCount:5, activePage: 1
+  , options: []}
   constructor(props) {
     super(props);
     this.onPageChange = this.onPageChange.bind(this)
+    this.handleChange = this.handleChange.bind(this)
+    this.handleSubmit = this.handleSubmit.bind(this)
 
   }
   componentDidMount() {
@@ -32,7 +39,10 @@ class ReportContainer extends Component {
      });
   }
   getData(){
-    var url = `http://127.0.0.1:5000/api/data?page=${this.state.totalCount}&skip=${this.state.activePage * this.state.totalCount}`;
+    const {totalCount, channel, ip, activePage} = this.state
+    var ips = ip.map(x=>`'${x}'`).join(',')
+    var url = `http://127.0.0.1:5000/api/data?pagesize=${totalCount}&page=${activePage}&channel=${channel}&ip=${ips}&skip=${(activePage-1) * totalCount}`;
+    console.log(url)
     $.ajax({
        url: url,
        type: "GET",
@@ -65,11 +75,15 @@ class ReportContainer extends Component {
     })
   }
 
-  handleChange = (e, { value }) => this.setState({ currentValues: value })
-
+  handleChange(e, { value }){
+    console.log(e, value)
+    this.setState({ ip: value })
+  }
+  handleSubmit(){
+    this.getData()
+  }
   render() {
     const {
-      currentValues,
       lastUpdated,
       activePage,
       boundaryRange,
@@ -78,6 +92,8 @@ class ReportContainer extends Component {
       showFirstAndLastNav,
       showPreviousAndNextNav,
       totalPages,
+      channel,
+      ip,
    } = this.state
 
         return (
@@ -101,12 +117,12 @@ class ReportContainer extends Component {
                   min={1}
                   onChange={this.handleInputChange}
                   type='number'
-                  value={totalPages}
+                  value={channel}
                 />
               </Form.Group>
               <Form.Group widths={2}>
                 <div className='field'>
-                <label>APP</label>
+                <label>IP</label>
                 <Dropdown
                    options={this.state.options}
                    search
@@ -114,12 +130,12 @@ class ReportContainer extends Component {
                    fluid
                    multiple
                    allowAdditions
-                   value={currentValues}
+                   value={ip}
                    onAddItem={this.handleAddition}
                    onChange={this.handleChange}
                  />
                </div>
-               <Form.Button className='submitButton'>Submit</Form.Button>
+               <Button className='submitButton' onClick={this.handleSubmit}>Submit</Button>
 
               </Form.Group>
               <Form.Group inline>
@@ -143,7 +159,7 @@ class ReportContainer extends Component {
                       <Table.HeaderCell>Device</Table.HeaderCell>
                       <Table.HeaderCell>Channel</Table.HeaderCell>
                       <Table.HeaderCell>Click Time</Table.HeaderCell>
-                      <Table.HeaderCell>Dowload</Table.HeaderCell>
+                      <Table.HeaderCell>Download</Table.HeaderCell>
                     </Table.Row>
                   </Table.Header>
 
@@ -151,11 +167,14 @@ class ReportContainer extends Component {
 
                     {this.state.data.map(x => {
                       return (
-
                           <Table.Row>
                             <Table.Cell>
-                              {/* <Header as='h2' textAlign='center'>A</Header> */}
+                              {/* demo purpose */}
+                              <div className='status-icon'>
+                              {x.ip %2 == 1?
                                 <Icon name='warning sign' color='yellow'/>
+                                : <Icon name='check circle' color='green'/>}
+                              </div>
                             </Table.Cell>
                             <Table.Cell>{x.ip}</Table.Cell>
                             <Table.Cell>{x.app}</Table.Cell>
@@ -163,9 +182,10 @@ class ReportContainer extends Component {
                             <Table.Cell>{x.channel}</Table.Cell>
                             <Table.Cell>{x.click_time?moment(x.click_time).format("YYYY-MM-DD HH:mm:ss"):'n/a'}</Table.Cell>
                             <Table.Cell>
-                              <Icon name={x.is_attributed? 'checkmark':'remove'}  color={x.is_attributed? 'blue':'black'}/>
+                              <div className='status-icon'>
+                                <Icon name={x.is_attributed? 'checkmark':'remove'}  color={x.is_attributed? 'blue':'black'}/>
+                              </div>
                             </Table.Cell>
-
                           </Table.Row>
 
 
