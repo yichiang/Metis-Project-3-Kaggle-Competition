@@ -126,7 +126,7 @@ class PredictContainer extends Component {
     {loading?  'Just one second':  'Your score:'}
   </Message.Header>
     <div>{score}</div>
-    <div className='red'>{score > 0.5?"This user won't download the app": "This user should download the app"}</div>
+    <div className='red'>{score > 0.5?"This user might download the app": "This user might not download the app"}</div>
 </Message.Content>
 </Message>
         </div>

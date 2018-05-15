@@ -6,7 +6,25 @@ import '../../App.css';
 import ReactFauxDOM from 'react-faux-dom';
 import ScatterChartContainer from './ScatterChartContainer'
 import IpChartContainer from './IpChartContainer'
+import HourLineChartContainer from './HourLineChartContainer'
 
+const titles = [{
+  mainTitle:"Total Record (x) and download Count (y) by different Apps (color)",
+  subTItle:"It helps us to see app dowload rate"
+},
+{
+  mainTitle:"Total Record and download Count by different Apps",
+  subTItle:"It helps us to see app dowload rate"
+}]
+
+const titles2 = [{
+  mainTitle:"Total Record (x) and download Count (y) by different Hour (color)",
+  subTItle:""
+},
+{
+  mainTitle:"Total Record and download Count by different Hour",
+  subTItle:""
+}]
 class ListInfoContainer extends Component {
   state = { lastUpdated:'1/1/2019'}
   constructor(props) {
@@ -16,6 +34,7 @@ class ListInfoContainer extends Component {
   componentDidMount() {
     this.getAppData()
     this.getIpData()
+    this.getHourData()
   }
 
   getAppData(){
@@ -46,13 +65,28 @@ class ListInfoContainer extends Component {
        }.bind(this)
      });
   }
+  getHourData(){
+    var url = 'http://127.0.0.1:5000/api/data/hour';
+    var self=this
+    $.ajax({
+       url: url,
+       type: "GET",
+       dataType: 'json',
+       success: function (data) {
+         console.log(data)
+         var convert_data = data.data;
+         self.setState({hourData: convert_data});
+       }.bind(this)
+     });
+  }
 
   render() {
-    const {lastUpdated, data, ipData} = this.state;
+    const {lastUpdated, data, ipData, hourData} = this.state;
         return (
           <div>
-            {data&&<ScatterChartContainer data={data}/>}
+            {data&&<ScatterChartContainer data={data} keyName='app' titles={titles}/>}
             {ipData&&<IpChartContainer data={ipData}/>}
+            {hourData&&<ScatterChartContainer data={hourData}  keyName='hr' titles={titles2}/>}
           </div>
         )
     }

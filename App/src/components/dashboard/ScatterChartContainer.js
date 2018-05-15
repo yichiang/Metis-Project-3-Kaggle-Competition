@@ -6,11 +6,10 @@ import $ from 'jquery'
 import * as d3 from 'd3'
 import '../../App.css';
 import {withFauxDOM} from 'react-faux-dom';
+import moment from 'moment'
 
-// var tool_tip_el;
-// var div_tooltip;
 class ScatterChartContainer extends Component {
-  state = { toogleTooltip: true}
+  state = { }
   constructor(props) {
     super(props);
     this.getChart=this.getChart.bind(this)
@@ -22,6 +21,7 @@ class ScatterChartContainer extends Component {
   }
 
     getChart(data,div_tooltip){
+      var keyName = this.props.keyName
       //Source:https://bl.ocks.org/mbostock/3887118
       var margin = {top: 20, right: 20, bottom: 30, left: 40},
           width = 960 - margin.left - margin.right,
@@ -93,38 +93,38 @@ class ScatterChartContainer extends Component {
             .attr("r", 3.5)
             .attr("cx", function(d) { return x(d.record_count); })
             .attr("cy", function(d) { return y(d.dowload_count); })
-            .style("fill", function(d) { return color(d.app); })
-          
+            .style("fill", function(d) { return color(moment(d[keyName]).hour()); })
+
 
 
     }
 
   render() {
     console.log("props",this.props)
+    const {keyName, titles} =this.props
         return (
-          <div id="vis-container">
+          <div>
             <div  className='scrollChart'>
               <Header as='h2'>
-                  Total Record (x) and download Count (y) by different Apps (color)
+                  {titles[0].mainTitle}
                   <Header.Subheader>
-                    It helps us to see app dowload rate
+                    {titles[0].subTItle}
                   </Header.Subheader>
                 </Header>
             {this.props.chart}
             </div>
-            {/* {this.state.toogleTooltip && this.props.tooltip} */}
-            {/* {this.props.tooltip} */}
+
             {this.props.data&&<div className='scrollChart'>
               <Header as='h2'>
-                  Total Record and download Count by different Apps
+                {titles[1].mainTitle}
                   <Header.Subheader>
-                    It helps us to see app dowload rate
+                    {titles[1].subTItle}
                   </Header.Subheader>
                 </Header>
                 <BarChart width={2000} height={300} data={this.props.data}
                     margin={{top: 5, right: 30, left: 20, bottom: 5}}>
                <CartesianGrid strokeDasharray="3 3"/>
-                 <XAxis dataKey="app"/>
+                 <XAxis dataKey={keyName}/>
                  <YAxis/>
                  <Tooltip/>
                  <Legend />
