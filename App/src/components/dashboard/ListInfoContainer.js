@@ -7,6 +7,7 @@ import ReactFauxDOM from 'react-faux-dom';
 import ScatterChartContainer from './ScatterChartContainer'
 import IpChartContainer from './IpChartContainer'
 import HourLineChartContainer from './HourLineChartContainer'
+import APPPieContainer from './APPPieContainer'
 
 const titles = [{
   mainTitle:"Total Record (x) and download Count (y) by different Apps (color)",
@@ -87,6 +88,7 @@ class ListInfoContainer extends Component {
             {data&&<ScatterChartContainer data={data} keyName='app' titles={titles}/>}
             {ipData&&<IpChartContainer data={ipData}/>}
             {hourData&&<ScatterChartContainer data={hourData}  keyName='hr' titles={titles2}/>}
+            {hourData&&<APPPieContainer data={hourData}  keyName='hr' titles={titles2}/>}
           </div>
         )
     }

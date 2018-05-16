@@ -8,7 +8,9 @@ import $ from 'jquery'
 class PredictContainer extends Component {
   state = {
     search_model: {ip:48418, app:14, device:1, channel:121, os:1, hour: moment().hour(), score:-1},
-    loading: false
+    loading: false,
+    searchHistories:[],
+
   }
   constructor(props) {
     super(props);
@@ -33,9 +35,11 @@ class PredictContainer extends Component {
   handleSubmit(e){
     // console.log("submit",e)
     var url = `http://127.0.0.1:5000/api/score`;
-    var currentModel = this.state.search_model
+    var currentModel =  JSON.parse(JSON.stringify(this.state.search_model));
+    var currentSearchHistory = this.state.searchHistories
     this.setState({loading: true})
     var self = this;
+    var factor = 10000;
     $.ajax({
        url: url,
        type: "post",
@@ -43,7 +47,11 @@ class PredictContainer extends Component {
        contentType: "application/json; charset=utf-8",
        success: function (data) {
          console.log("data----", data)
-         self.setState({loading: false, score: data.score})
+         currentModel.date = moment().format("YYYY-MM-DD HH:mm:ss");
+         currentModel.score = Math.round(data.score* factor) / factor;
+         currentSearchHistory.push(currentModel)
+         console.log("currentSearchHistory", currentSearchHistory)
+         self.setState({loading: false, score: Math.round(data.score* factor) / factor, searchHistories:currentSearchHistory })
 
        }.bind(this)
      });
@@ -53,7 +61,8 @@ class PredictContainer extends Component {
     const {
       search_model,
       loading,
-      score
+      score,
+      searchHistories
    } = this.state
 
     // const {activeItem, links} = this.state;
@@ -118,17 +127,47 @@ class PredictContainer extends Component {
            </Form.Group>
          </Form>
          <Message icon>
-{loading?  <Icon name='circle notched' loading />
-:  <Icon name='unlock alternate' />
-}
-<Message.Content>
-    <Message.Header>
-    {loading?  'Just one second':  'Your score:'}
-  </Message.Header>
-    <div>{score}</div>
-    <div className='red'>{score > 0.5?"This user might download the app": "This user might not download the app"}</div>
-</Message.Content>
-</Message>
+          {loading?  <Icon name='circle notched' loading />
+          :  <Icon name='unlock alternate' />
+          }
+          <Message.Content>
+              <Message.Header>
+              {loading?  'Just one second':  'Your score:'}
+            </Message.Header>
+              <div>{score}</div>
+              <div className='red'>{score > 0.5?"This user might download the app": "This user might not download the app"}</div>
+          </Message.Content>
+          </Message>
+
+
+          <Table celled>
+    <Table.Header>
+      <Table.Row>
+        <Table.HeaderCell>Date</Table.HeaderCell>
+        <Table.HeaderCell>Ip</Table.HeaderCell>
+        <Table.HeaderCell>App</Table.HeaderCell>
+        <Table.HeaderCell>Device</Table.HeaderCell>
+        <Table.HeaderCell>OS</Table.HeaderCell>
+        <Table.HeaderCell>Score</Table.HeaderCell>
+      </Table.Row>
+    </Table.Header>
+
+    <Table.Body>
+      {searchHistories.map(x=>{
+        return (
+          <Table.Row>
+            <Table.Cell>{x.date}</Table.Cell>
+            <Table.Cell>{x.ip}</Table.Cell>
+            <Table.Cell>{x.app}</Table.Cell>
+            <Table.Cell>{x.device}</Table.Cell>
+            <Table.Cell>{x.os}</Table.Cell>
+            <Table.Cell warning={x.score > 0.5} error={x.score <= 0.5}>{x.score}</Table.Cell>
+          </Table.Row>
+        )
+      })}
+
+    </Table.Body>
+  </Table>
         </div>
         )
     }

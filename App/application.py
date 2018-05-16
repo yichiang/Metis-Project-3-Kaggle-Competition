@@ -11,27 +11,21 @@ import pickle
 # create your own connection, use '\list' in psql to find the name and owner of the database
 cnx = create_engine('postgresql://yichiang:yichiang@52.206.3.40:5432/adtracking')
 
-with open("../../randForest_best_model.pkl", 'rb') as picklefile:
+with open("randForest_best_model.pkl", 'rb') as picklefile:
     PREDICTOR = pickle.load(picklefile)
 
 
 #---------- URLS AND WEB PAGES -------------#
-# my_loader = jinja2.ChoiceLoader([
-#         app.jinja_loader,
-#         jinja2.FileSystemLoader(['',
-#                                  '/upv']),
-#     ])
+
 # Initialize the app
 template_dir = os.path.abspath('')
-app = Flask(__name__, template_folder=template_dir, static_url_path='')
-# app.jinja_loader = my_loader
+app = Flask(__name__, template_folder=template_dir, static_url_path='/static')
 cors = CORS(app, resources={r"/api/*": {"origins": "*"}})
 
 # Homepage
 @app.route("/")
 def index():
     return render_template("index.html")
-
 
 @app.route("/api/data", methods=["Get"])
 def getData():
