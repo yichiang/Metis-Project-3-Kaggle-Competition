@@ -3,7 +3,7 @@ import NavComponent from './NavComponent'
 import DashboardContainer from './DashboardContainer'
 import PredictContainer from './PredictContainer'
 import { Segment } from 'semantic-ui-react'
-const domainUrl = "http://52.206.3.40"
+const domainUrl = "https://52.206.3.40"
 //const domainUrl = "http://127.0.0.1:5000"
 
 class HomeContainer extends Component {
