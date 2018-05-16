@@ -10,20 +10,20 @@ import HourLineChartContainer from './HourLineChartContainer'
 import APPPieContainer from './APPPieContainer'
 
 const titles = [{
-  mainTitle:"Total Record (x) and download Count (y) by different Apps (color)",
+  mainTitle:"Total Record (x) and download Count (y) by different apps (color)",
   subTItle:"It helps us to see app dowload rate"
 },
 {
-  mainTitle:"Total Record and download Count by different Apps",
-  subTItle:"It helps us to see app dowload rate"
+  mainTitle:"Total Record and download Count by different apps",
+  subTItle:""
 }]
 
 const titles2 = [{
-  mainTitle:"Total Record (x) and download Count (y) by different Hour (color)",
+  mainTitle:"Total Record (x) and download Count (y) by different hour (color)",
   subTItle:""
 },
 {
-  mainTitle:"Total Record and download Count by different Hour",
+  mainTitle:"Total Record and download Count by different hour",
   subTItle:""
 }]
 class ListInfoContainer extends Component {

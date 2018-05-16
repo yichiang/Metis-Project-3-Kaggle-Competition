@@ -36,6 +36,7 @@ class HomeContainer extends Component {
             <Segment attached='bottom'>
               {activeItem=='dashboard'&&<DashboardContainer domainUrl={domainUrl}/>}
               {activeItem=='predict'&&<PredictContainer domainUrl={domainUrl}/>}
+
           </Segment>
         </div>
         )
