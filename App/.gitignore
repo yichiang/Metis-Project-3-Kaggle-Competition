@@ -1,8 +1,5 @@
 # See https://help.github.com/ignore-files/ for more about ignoring files.
 
-submission.csv
-submission_second.csv
-activity_sql.csv
 
 # dependencies
 /node_modules

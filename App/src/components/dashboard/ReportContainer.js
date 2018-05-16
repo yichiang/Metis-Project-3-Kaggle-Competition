@@ -25,7 +25,8 @@ class ReportContainer extends Component {
 
   getAllIps(){
 
-    var url = `http://127.0.0.1:5000/api/data/ip/all`;
+    var url = this.props.domainUrl+`/api/data/ip/all`;
+    console.log("url", url)
     $.ajax({
        url: url,
        type: "GET",
@@ -41,7 +42,7 @@ class ReportContainer extends Component {
   getData(){
     const {totalCount, channel, ip, activePage} = this.state
     var ips = ip.map(x=>`'${x}'`).join(',')
-    var url = `http://127.0.0.1:5000/api/data?pagesize=${totalCount}&page=${activePage}&channel=${channel}&ip=${ips}&skip=${(activePage-1) * totalCount}`;
+    var url = this.props.domainUrl+`/api/data?pagesize=${totalCount}&page=${activePage}&channel=${channel}&ip=${ips}&skip=${(activePage-1) * totalCount}`;
     console.log(url)
     $.ajax({
        url: url,

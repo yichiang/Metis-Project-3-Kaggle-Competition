@@ -15,11 +15,12 @@ class DashboardContainer extends Component {
   }
   handleItemClick = (e, { name }) => this.setState({ activeItem: name })
   render() {
+    const {domainUrl} = this.props;
     const {activeItem, links} = this.state;
         return (
         <div>
-           <ReportContainer/>
-           <ListInfoContainer/>
+           <ReportContainer domainUrl={domainUrl}/>
+           <ListInfoContainer domainUrl={domainUrl}/>
         </div>
         )
     }

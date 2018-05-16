@@ -34,7 +34,7 @@ class PredictContainer extends Component {
   handleChange = (e, { value }) => this.setState({ currentValues: value })
   handleSubmit(e){
     // console.log("submit",e)
-    var url = `http://127.0.0.1:5000/api/score`;
+    var url = this.props.domainUrl+`/api/score`;
     var currentModel =  JSON.parse(JSON.stringify(this.state.search_model));
     var currentSearchHistory = this.state.searchHistories
     this.setState({loading: true})

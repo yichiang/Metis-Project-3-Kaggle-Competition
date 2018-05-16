@@ -39,7 +39,7 @@ class ListInfoContainer extends Component {
   }
 
   getAppData(){
-    var url = 'http://127.0.0.1:5000/api/data/app';
+    var url = this.props.domainUrl+'/api/data/app';
     var self=this
     $.ajax({
        url: url,
@@ -53,7 +53,7 @@ class ListInfoContainer extends Component {
      });
   }
   getIpData(){
-    var url = 'http://127.0.0.1:5000/api/data/ip';
+    var url = this.props.domainUrl+'/api/data/ip';
     var self=this
     $.ajax({
        url: url,
@@ -67,7 +67,7 @@ class ListInfoContainer extends Component {
      });
   }
   getHourData(){
-    var url = 'http://127.0.0.1:5000/api/data/hour';
+    var url = this.props.domainUrl+'/api/data/hour';
     var self=this
     $.ajax({
        url: url,
@@ -82,13 +82,14 @@ class ListInfoContainer extends Component {
   }
 
   render() {
+    const {domainUrl} = this.props;
     const {lastUpdated, data, ipData, hourData} = this.state;
         return (
           <div>
-            {data&&<ScatterChartContainer data={data} keyName='app' titles={titles}/>}
+            {data&&<ScatterChartContainer data={data} keyName='app' titles={titles} domainUrl={domainUrl}/>}
             {ipData&&<IpChartContainer data={ipData}/>}
-            {hourData&&<ScatterChartContainer data={hourData}  keyName='hr' titles={titles2}/>}
-            {hourData&&<APPPieContainer data={hourData}  keyName='hr' titles={titles2}/>}
+            {hourData&&<ScatterChartContainer data={hourData}  keyName='hr' titles={titles2} domainUrl={domainUrl}/>}
+            {hourData&&<APPPieContainer data={hourData}  keyName='hr' titles={titles2} domainUrl={domainUrl}/>}
           </div>
         )
     }
