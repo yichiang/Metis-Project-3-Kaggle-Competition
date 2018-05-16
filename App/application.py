@@ -23,9 +23,9 @@ app = Flask(__name__, template_folder=template_dir, static_url_path='/static')
 cors = CORS(app, resources={r"/api/*": {"origins": "*"}})
 
 # Homepage
-@app.route("/")
-def index():
-    return render_template("index.html")
+# @app.route("/")
+# def index():
+#     return render_template("index.html")
 
 @app.route("/api/data", methods=["Get"])
 def getData():
@@ -95,5 +95,8 @@ def score():
 
 # Start the app server on port 80
 # (The default website port)
-app.run(host='0.0.0.0')
-app.run(debug=True)
+# app.run(host='0.0.0.0')
+# app.run(debug=True)
+
+if __name__ == "__main__":
+	app.run()
