@@ -93,7 +93,15 @@ class ScatterChartContainer extends Component {
             .attr("r", 3.5)
             .attr("cx", function(d) { return x(d.record_count); })
             .attr("cy", function(d) { return y(d.dowload_count); })
-            .style("fill", function(d) { return color(moment(d[keyName]).hour()); })
+            .style("fill", function(d) {
+              var temp_c = '';
+              if(d[keyName] == 'hr'){
+                temp_c = color(moment(d[keyName]).hour())
+              }else{
+                temp_c= color(d[keyName])
+              }
+              return temp_c;
+            })
 
 
 
