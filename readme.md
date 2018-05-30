@@ -14,8 +14,8 @@ https://www.kaggle.com/c/talkingdata-adtracking-fraud-detection
 # Information
 
 * Website:
-*** ReactJS, Postgresql, Flask
+ReactJS, Postgresql, Flask
 
 
-* ML:
-*** Python3
+* ML: 
+Python3
